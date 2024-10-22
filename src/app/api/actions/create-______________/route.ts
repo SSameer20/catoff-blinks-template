@@ -6,6 +6,7 @@ import {
   createActionHeaders,
   ActionError,
   LinkedAction,
+  ActionParameterSelectable,
 } from "@solana/actions";
 import * as web3 from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
@@ -42,16 +43,41 @@ export const GET = async (req: Request) => {
       requestUrl,
       "clusterurl",
       false,
-      Object.values(CLUSTER_TYPES),
-      CLUSTER_TYPES.DEVNET,
     );
+
+    const clusterOptions: ActionParameterSelectable<"radio">[] = clusterurl
+      ? []
+      : [
+          {
+            name: "clusterurl",
+            label: "Select Cluster",
+            type: "radio",
+            required: true,
+            options: [
+              {
+                label: "Devnet",
+                value: CLUSTER_TYPES.DEVNET,
+                selected: true,
+              },
+              {
+                label: "Mainnet",
+                value: CLUSTER_TYPES.MAINNET,
+              },
+            ],
+          },
+        ];
+
+    const href = clusterurl
+      ? `/api/actions/create-challenge?clusterurl=${clusterurl}&name={name}&token={token}&wager={wager}&startTime={startTime}&duration={duration}`
+      : `/api/actions/create-challenge?clusterurl={clusterurl}&name={name}&token={token}&wager={wager}&startTime={startTime}&duration={duration}`;
 
     const actions: LinkedAction[] = [
       {
         type: "transaction",
         label: "Create a ___________________", // TODO: edit text here
-        href: `/api/actions/create-challenge?clusterurl=${clusterurl}&name={name}&token={token}&wager={wager}&startTime={startTime}&duration={duration}`,
+        href,
         parameters: [
+          ...clusterOptions,
           {
             name: "name",
             label: "Name your challenge",

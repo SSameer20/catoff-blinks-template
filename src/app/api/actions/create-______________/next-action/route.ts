@@ -54,6 +54,13 @@ export const POST = async (req: Request) => {
       throw new GenericError("Invalid account provided", StatusCodes.BAD_REQUEST);
     }
 
+    let signature: string;
+    try {
+      signature = body.signature!;
+      if (!signature) throw "Invalid signature";
+    } catch (err) {
+      throw new GenericError('Invalid "signature" provided', StatusCodes.BAD_REQUEST);
+    }
     /////////////////////////////////////
     ///////////Parse Phase///////////////
     /////////////////////////////////////

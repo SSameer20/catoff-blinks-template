@@ -16,8 +16,9 @@ export const GET = async () => {
     ],
   };
 
-  return Response.json(payload, {
+  return new Response(JSON.stringify(payload), {
     headers: createActionHeaders(),
+    status: 200,
   });
 };
 

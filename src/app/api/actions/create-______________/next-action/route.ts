@@ -23,7 +23,7 @@ import { jsonResponse, Promisify } from "@/common/helper/responseMaker";
 const headers = createActionHeaders();
 
 export const GET = async (req: Request) => {
-  return Response.json({ message: "Method not supported" } as ActionError, {
+  return new Response.json({ message: "Method not supported" } as ActionError, {
     status: 403,
     headers,
   });
